@@ -46,7 +46,9 @@ html.sidebar-collapsed #sidebar-logo {
   --primary-fg:      #ffffff;
 
   --secondary:       #8b5cf6;
-  --secondary-hover: #7c3aed;
+  --secondary-hover:  #7c3aed;
+  --secondary-active: #6d28d9;
+  --secondary-subtle: #f5f3ff;
   --secondary-fg:    #ffffff;
 
   --surface-base:    #ffffff;
@@ -84,6 +86,14 @@ html.sidebar-collapsed #sidebar-logo {
   --primary:         #60a5fa;
   --primary-hover:   #93c5fd;
   --primary-subtle:  #1e3a5f;
+  --primary-active:   #1d4ed8;
+  --primary-fg:       #ffffff;
+
+  --secondary:        #a78bfa;
+  --secondary-hover:  #c4b5fd;
+  --secondary-active: #7c3aed;
+  --secondary-subtle: #2e1065;
+  --secondary-fg:     #ffffff;
 
   --surface-base:    #0f172a;
   --surface-raised:  #1e293b;
@@ -93,6 +103,7 @@ html.sidebar-collapsed #sidebar-logo {
   --text-primary:    #f1f5f9;
   --text-secondary:  #94a3b8;
   --text-disabled:   #475569;
+  --text-inverse:     #111827;
 
   --border:          #334155;
   --border-strong:   #475569;
@@ -124,7 +135,9 @@ html.sidebar-collapsed #sidebar-logo {
 
   --color-secondary:       var(--secondary);
   --color-secondary-hover: var(--secondary-hover);
-  --color-secondary-fg:    var(--secondary-fg);
+  --color-secondary-fg:     var(--secondary-fg);
+  --color-secondary-active: var(--secondary-active);
+  --color-secondary-subtle: var(--secondary-subtle);
 
   --color-surface-base:    var(--surface-base);
   --color-surface-raised:  var(--surface-raised);

@@ -6,6 +6,7 @@
   var _size        = locals.size        || 'md';
   var _fullscreen  = !!locals.fullscreen;
   var _scrollable  = !!locals.scrollable;
+  var _closeOnBackdropClick = locals.closeOnBackdropClick !== false;
 
   var overlayClass = _open ? 'opacity-100' : 'opacity-0 pointer-events-none';
   var sizeMap = { sm: 'max-w-sm', md: 'max-w-md', lg: 'max-w-lg' };
@@ -15,7 +16,7 @@
 %>
 <div
   id="<%= _id %>"
-  class="fixed inset-0 z-50 flex p-4 transition-opacity duration-200 <%= _fullscreen ? 'items-stretch justify-stretch' : 'items-center justify-center' %> <%= overlayClass %>"
+  class="fixed inset-0 z-[100] flex p-4 transition-opacity duration-200 <%= _fullscreen ? 'items-stretch justify-stretch' : 'items-center justify-center' %> <%= overlayClass %>"
   role="dialog"
   aria-modal="true"
   aria-labelledby="<%= titleId %>"
@@ -24,7 +25,7 @@
   <div
     class="absolute inset-0 bg-black/50"
     aria-hidden="true"
-    onclick="closeModal('<%= _id %>')"
+    <% if (_closeOnBackdropClick) { %>onclick="closeModal('<%= _id %>')"<% } %>
   ></div>
   <div
     id="<%= _id %>-panel"
@@ -58,13 +59,16 @@
 
 <script>
 (function () {
+  var FOCUSABLE = 'button:not([disabled]),input:not([disabled]),textarea:not([disabled]),select:not([disabled]),a[href],[tabindex]:not([tabindex="-1"])';
+
   function openModal(id) {
     var el = document.getElementById(id);
     var panel = document.getElementById(id + '-panel');
     if (!el || !panel) return;
     el.classList.remove('opacity-0', 'pointer-events-none');
     el.classList.add('opacity-100');
-    panel.focus();
+    var first = panel.querySelectorAll(FOCUSABLE)[0];
+    if (first) first.focus(); else panel.focus();
   }
 
   function closeModal(id) {
@@ -79,9 +83,24 @@
 
   var modalId = '<%= _id %>';
   document.addEventListener('keydown', function (e) {
-    if (e.key !== 'Escape') return;
     var el = document.getElementById(modalId);
-    if (el && !el.classList.contains('opacity-0')) closeModal(modalId);
+    if (!el || el.classList.contains('opacity-0')) return;
+
+    if (e.key === 'Escape') { closeModal(modalId); return; }
+
+    if (e.key === 'Tab') {
+      var panel = document.getElementById(modalId + '-panel');
+      if (!panel) return;
+      var focusable = Array.from(panel.querySelectorAll(FOCUSABLE));
+      if (focusable.length === 0) return;
+      var first = focusable[0];
+      var last  = focusable[focusable.length - 1];
+      if (e.shiftKey) {
+        if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+      } else {
+        if (document.activeElement === last)  { e.preventDefault(); first.focus(); }
+      }
+    }
   });
 })();
 </script>

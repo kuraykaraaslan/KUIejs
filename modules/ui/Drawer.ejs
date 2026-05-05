@@ -19,7 +19,7 @@ var panelTranslate = _open
 
 <div
   id="<%= _id %>"
-  class="fixed inset-0 z-50 flex transition-opacity duration-200 <%= overlayClass %>"
+  class="fixed inset-0 z-[100] flex transition-opacity duration-200 <%= overlayClass %>"
   role="dialog"
   aria-modal="true"
   aria-label="<%= _title %>"
@@ -67,6 +67,7 @@ var panelTranslate = _open
 
 <script>
 (function () {
+  var FOCUSABLE = 'button:not([disabled]),input:not([disabled]),textarea:not([disabled]),select:not([disabled]),a[href],[tabindex]:not([tabindex="-1"])';
   var drawerId = '<%= _id %>';
 
   function openDrawer(id) {
@@ -77,7 +78,8 @@ var panelTranslate = _open
     el.classList.add('opacity-100');
     panel.classList.remove('translate-x-full', '-translate-x-full');
     panel.classList.add('translate-x-0');
-    panel.focus();
+    var first = panel.querySelectorAll(FOCUSABLE)[0];
+    if (first) first.focus(); else panel.focus();
   }
 
   function closeDrawer(id) {
@@ -95,9 +97,24 @@ var panelTranslate = _open
   window.closeDrawer = window.closeDrawer || closeDrawer;
 
   document.addEventListener('keydown', function (e) {
-    if (e.key !== 'Escape') return;
     var el = document.getElementById(drawerId);
-    if (el && !el.classList.contains('opacity-0')) closeDrawer(drawerId);
+    if (!el || el.classList.contains('opacity-0')) return;
+
+    if (e.key === 'Escape') { closeDrawer(drawerId); return; }
+
+    if (e.key === 'Tab') {
+      var panel = document.getElementById(drawerId + '-panel');
+      if (!panel) return;
+      var focusable = Array.from(panel.querySelectorAll(FOCUSABLE));
+      if (focusable.length === 0) return;
+      var first = focusable[0];
+      var last  = focusable[focusable.length - 1];
+      if (e.shiftKey) {
+        if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+      } else {
+        if (document.activeElement === last)  { e.preventDefault(); first.focus(); }
+      }
+    }
   });
 })();
 </script>
