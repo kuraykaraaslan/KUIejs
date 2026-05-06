@@ -4,16 +4,16 @@
   var _dis = locals.disabled ? 'disabled' : '';
   var _id = locals.id || 'checkbox-' + Math.random().toString(36).substr(2, 9);
   
-  var boxClass = {
+  var sc = {
     sm: 'w-3.5 h-3.5 text-xs',
     md: 'w-4 h-4 text-sm',
-    lg: 'w-5 h-5 text-base'
+    lg: 'w-5 h-5 text-base',
   }[_sz] || 'w-4 h-4 text-sm';
 %>
 <div class="flex items-start <%= locals.className || '' %>">
   <div class="flex items-center h-5">
     <input id="<%= _id %>" type="checkbox" <%= _ch %> <%= _dis %>
-      class="rounded border-border text-primary focus:ring-primary/20 bg-surface <%= boxClass %> <%= _dis ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer' %>"
+      class="rounded border-border text-primary focus:ring-2 focus:ring-border-focus bg-surface-base <%= sc %> <%= _dis ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer' %>"
       <% if(locals.onchange) { %>onchange="<%= locals.onchange %>"<% } %>
     >
   </div>

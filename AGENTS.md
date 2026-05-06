@@ -1,3 +1,5 @@
+> **Note:** `../00_Config_and_AI_Rules` is always tagged and must be loaded before any work begins.
+
 # 02 EJS Components
 
 Server-rendered multi-page website themes built with Node.js, Express, EJS, and Tailwind CSS 4.

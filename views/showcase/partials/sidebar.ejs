@@ -95,6 +95,11 @@
               >
                 <span class="sidebar-item-icon flex items-center justify-center w-6 h-6 rounded-md text-xs font-bold shrink-0 <%= isActive ? 'bg-primary text-primary-fg' : 'bg-surface-sunken text-text-secondary' %>"><%= item.abbr %></span>
                 <span class="sidebar-full-only flex-1 truncate text-sm"><%= item.title %></span>
+                <% if (item.status === 'beta') { %>
+                  <span class="sidebar-full-only shrink-0 text-[9px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded bg-info-subtle text-info-fg" aria-label="Beta">beta</span>
+                <% } else if (item.status === 'deprecated') { %>
+                  <span class="sidebar-full-only shrink-0 text-[9px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded bg-warning-subtle text-warning-fg" aria-label="Deprecated">depr</span>
+                <% } %>
               </a>
             </li>
           <% }); %>
@@ -205,6 +210,11 @@
                 >
                   <span class="flex items-center justify-center w-6 h-6 rounded-md text-xs font-bold shrink-0 <%= isActive ? 'bg-primary text-primary-fg' : 'bg-surface-sunken text-text-secondary' %>"><%= item.abbr %></span>
                   <span class="flex-1 truncate"><%= item.title %></span>
+                  <% if (item.status === 'beta') { %>
+                    <span class="shrink-0 text-[9px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded bg-info-subtle text-info-fg" aria-label="Beta">beta</span>
+                  <% } else if (item.status === 'deprecated') { %>
+                    <span class="shrink-0 text-[9px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded bg-warning-subtle text-warning-fg" aria-label="Deprecated">depr</span>
+                  <% } %>
                 </a>
               </li>
             <% }); %>

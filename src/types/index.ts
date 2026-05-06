@@ -20,12 +20,16 @@ export type ShowcaseMeta = {
   themes: ThemeMeta[];
 };
 
+export type ComponentStatus = 'stable' | 'beta' | 'deprecated';
+
 export type ShowcaseNavItem = {
   id: string;
   title: string;
   category: string;
   abbr: string;
   href?: string;
+  status?: ComponentStatus;
+  since?: string;
 };
 
 export type ShowcaseNavGroup = {

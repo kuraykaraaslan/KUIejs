@@ -11,6 +11,7 @@ import { buildDomainCommonDiscountData } from './domain-common-discount.showcase
 import { buildDomainCommonSeoData } from './domain-common-seo.showcase';
 import { buildDomainCommonLocationData } from './domain-common-location.showcase';
 import { buildDomainCommonEmailData } from './domain-common-email.showcase';
+import { buildDomainCommonChartsData } from './domain-common-charts.showcase';
 
 const languageSwitcherSource = fs.readFileSync(path.join(process.cwd(), 'modules/domain/common/i18n/LanguageSwitcher.ejs'), 'utf-8');
 const directionProviderSource= fs.readFileSync(path.join(process.cwd(), 'modules/domain/common/i18n/DirectionProvider.ejs'), 'utf-8');
@@ -194,6 +195,7 @@ export function buildDomainCommonData(): ShowcaseItem[] {
     directionProviderItem,
     notFoundPageItem,
     ...buildDomainCommonEmailData(),
+    ...buildDomainCommonChartsData(),
   ]) {
     allItems[item.id] = item;
   }
@@ -269,6 +271,7 @@ export function buildDomainCommonData(): ShowcaseItem[] {
     'email-ticket-opened',
     'email-ticket-reply',
     'email-ticket-resolved',
+    'charts',
   ];
 
   return ORDER.map((id) => {

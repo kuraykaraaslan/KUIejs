@@ -1206,7 +1206,7 @@ res.render('theme/common/email/marketing/newsletter', {
             liveUrl: '/theme/common/email/marketing/promotional',
           }).replace(
             '<div class=" px-5 py-4 text-center"></div>',
-            `<div class="px-5 py-6 text-center" style="background:linear-gradient(135deg,#3b82f6,#8b5cf6)">
+            `<div class="px-5 py-6 text-center" style="background:linear-gradient(135deg,var(--primary),var(--secondary))">
               <span class="inline-block bg-white/20 rounded-full px-3 py-0.5 text-white text-[9px] font-semibold mb-2 uppercase tracking-wide">Limited Time</span>
               <p class="text-white font-black text-3xl mb-1">50% OFF</p>
               <p class="text-white/80 text-xs">This weekend only — upgrade and save</p>

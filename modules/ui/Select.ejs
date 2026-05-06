@@ -5,16 +5,16 @@
   var _opts   = locals.options   || [];
   var _sz     = locals.size      || 'md';
 
-  var sizeClass = {
+  var sc = {
     sm: 'px-2.5 py-1.5 text-sm',
     md: 'px-3 py-2 text-sm',
-    lg: 'px-4 py-3 text-base'
+    lg: 'px-4 py-3 text-base',
   }[_sz] || 'px-3 py-2 text-sm';
 
-  var baseClass = "block w-full rounded-md border bg-surface text-text-primary appearance-none focus:outline-none focus:ring-2 focus:ring-primary/20 disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-surface-sunken transition-colors";
+  var baseClass = 'block w-full rounded-md border bg-surface-base text-text-primary appearance-none focus:outline-none focus:ring-2 focus:ring-border-focus disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-surface-sunken transition-colors';
   var stateClass = locals.error
-    ? "border-error focus:border-error focus:ring-error/20"
-    : "border-border focus:border-primary hover:border-text-tertiary";
+    ? 'border-error ring-1 ring-error bg-error-subtle'
+    : 'border-border hover:border-border-strong';
 %>
 <div class="w-full <%= locals.className || '' %>">
   <% if (locals.label) { %>
@@ -25,7 +25,7 @@
   <div class="relative">
     <select
       id="<%= _id %>"
-      class="<%= baseClass %> <%= stateClass %> <%= sizeClass %> pr-8"
+      class="<%= baseClass %> <%= stateClass %> <%= sc %> pr-8"
       <%= _dis %>
       <%= _req %>
       <% if (locals.name)  { %>name="<%= locals.name %>"<% } %>
@@ -41,7 +41,7 @@
         <option value="<%= opt.value %>" <%= (locals.value !== undefined && locals.value == opt.value) ? 'selected' : '' %>><%= opt.label %></option>
       <% }); %>
     </select>
-    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2.5 text-text-tertiary">
+    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2.5 text-text-disabled">
       <i class="fa-solid fa-chevron-down text-xs" aria-hidden="true"></i>
     </div>
   </div>

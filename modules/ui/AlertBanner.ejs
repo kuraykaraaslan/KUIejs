@@ -1,5 +1,5 @@
 <%
-  var _variant     = locals.variant     || 'info';
+  var _v           = locals.variant     || 'info';
   var _title       = locals.title       || '';
   var _message     = locals.message     || '';
   var _dismissible = !!locals.dismissible;
@@ -13,7 +13,7 @@
     error:   { container: 'bg-error-subtle border-error text-error-fg',       icon: 'fa-circle-xmark' },
     info:    { container: 'bg-info-subtle border-info text-info-fg',          icon: 'fa-circle-info' },
   };
-  var vm = variantMap[_variant] || variantMap.info;
+  var vm = variantMap[_v] || variantMap.info;
 %>
 <div id="<%= _id %>" role="alert" class="flex items-start gap-3 rounded-lg border p-4 <%= vm.container %>">
   <i class="fa-solid <%= vm.icon %> mt-0.5 shrink-0 text-base" aria-hidden="true"></i>

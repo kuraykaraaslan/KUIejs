@@ -3,22 +3,22 @@
   var _subtitle    = locals.subtitle    || '';
   var _headerRight = locals.headerRight || '';
   var _footer      = locals.footer      || '';
-  var _variant     = locals.variant     || 'raised';
+  var _v           = locals.variant     || 'raised';
   var _hoverable   = !!locals.hoverable;
   var _loading     = !!locals.loading;
   var _className   = locals.className   || '';
 
-  var variantClass = {
+  var vc = {
     raised:  'bg-surface-raised shadow-sm',
     flat:    'bg-surface-base',
     outline: 'bg-transparent',
-  }[_variant] || 'bg-surface-raised shadow-sm';
+  }[_v] || 'bg-surface-raised shadow-sm';
 
   var hoverClass = _hoverable
     ? 'transition-shadow hover:shadow-md hover:border-border-focus cursor-pointer'
     : '';
 %>
-<div class="rounded-xl border border-border overflow-hidden text-left <%= variantClass %> <%= hoverClass %><%= _className ? ' ' + _className : '' %>">
+<div class="rounded-xl border border-border overflow-hidden text-left <%= vc %> <%= hoverClass %><%= _className ? ' ' + _className : '' %>">
   <% if (_loading) { %>
   <div class="px-6 py-4 space-y-3 animate-pulse">
     <div class="h-4 bg-surface-sunken rounded w-2/3"></div>

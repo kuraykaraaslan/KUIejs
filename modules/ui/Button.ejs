@@ -1,10 +1,13 @@
 <%
+var _el      = locals.element  || 'button';
 var _v       = locals.variant  || 'primary';
 var _sz      = locals.size     || 'md';
 var _tp      = locals.type     || 'button';
 var _loading = locals.loading  || false;
 var _dis     = locals.disabled || _loading;
 var _sel     = locals.selected || false;
+var _isBtn   = _el === 'button';
+var _isLink  = _el === 'a';
 
 var vc = {
   primary:   'bg-primary text-primary-fg hover:bg-primary-hover',
@@ -30,12 +33,16 @@ var spinnerSz = {
   xl: 'h-5 w-5 border-2',
 }[_sz] || 'h-4 w-4 border-2';
 
-var selClass = _sel ? ' ring-2 ring-inset ring-border-focus' : '';
-%>
-<button
-  type="<%= _tp %>"
-  class="inline-flex items-center justify-center gap-2 rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus disabled:opacity-50 disabled:cursor-not-allowed <%= vc %> <%= sc %><%= locals.fullWidth ? ' w-full' : '' %><%= selClass %><%= locals.className ? ' ' + locals.className : '' %>"
-  <% if (_dis)     { %>disabled<% } %>
+var selClass  = _sel ? ' ring-2 ring-inset ring-border-focus' : '';
+var disClass  = (_dis && !_isBtn) ? ' opacity-50 pointer-events-none cursor-not-allowed' : '';
+%><<%= _el %>
+  <% if (_isBtn) { %>type="<%= _tp %>"<% } %>
+  <% if (_isLink && locals.href) { %>href="<%= locals.href %>"<% } %>
+  <% if (_isLink && locals.target) { %>target="<%= locals.target %>"<% } %>
+  <% if (_isLink && locals.target === '_blank') { %>rel="<%= locals.rel || 'noopener noreferrer' %>"<% } %>
+  class="inline-flex items-center justify-center gap-2 rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus disabled:opacity-50 disabled:cursor-not-allowed <%= vc %> <%= sc %><%= locals.fullWidth ? ' w-full' : '' %><%= selClass %><%= disClass %><%= locals.className ? ' ' + locals.className : '' %>"
+  <% if (_dis && _isBtn)  { %>disabled<% } %>
+  <% if (_dis && _isLink) { %>aria-disabled="true" tabindex="-1"<% } %>
   <% if (_loading) { %>aria-busy="true"<% } %>
   <% if (locals.ariaLabel) { %>aria-label="<%= locals.ariaLabel %>"<% } %>
   <% if (_sel || locals.ariaPressed !== undefined) { %>aria-pressed="<%= _sel ? 'true' : locals.ariaPressed %>"<% } %>
@@ -47,4 +54,4 @@ var selClass = _sel ? ' ring-2 ring-inset ring-border-focus' : '';
   <% } %>
   <% if (locals.children) { %><%= locals.children %><% } %>
   <% if (!_loading && locals.iconRight) { %><span aria-hidden="true" class="shrink-0"><%- locals.iconRight %></span><% } %>
-</button>
+</<%= _el %>>

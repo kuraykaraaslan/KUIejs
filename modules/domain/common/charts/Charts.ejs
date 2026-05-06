@@ -1,0 +1,33 @@
+<%
+/*
+  Charts.ejs — Chart.js chart wrapper
+  Props:
+    chartId    {string}  unique canvas id
+    type       {string}  'bar' | 'line' | 'doughnut' | 'radar' | 'polarArea'
+    title      {string}  card title
+    subtitle   {string?} card subtitle
+    data       {object}  Chart.js data object (JSON-serializable)
+    options    {object?} Chart.js options override (JSON-serializable)
+*/
+const _opts = typeof options !== 'undefined' ? options : {};
+%>
+<div class="rounded-xl border border-border bg-surface-raised p-5 shadow-sm">
+  <div class="mb-4">
+    <h3 class="text-sm font-semibold text-text-primary"><%= title %></h3>
+    <% if (typeof subtitle !== 'undefined' && subtitle) { %>
+      <p class="mt-0.5 text-xs text-text-secondary"><%= subtitle %></p>
+    <% } %>
+  </div>
+  <canvas id="<%= chartId %>"></canvas>
+</div>
+<script>
+(function () {
+  var canvas = document.getElementById('<%= chartId %>');
+  if (!canvas || !window.Chart) return;
+  new Chart(canvas, {
+    type: '<%- type %>',
+    data: <%- JSON.stringify(data) %>,
+    options: Object.assign({ responsive: true, plugins: { legend: { position: 'top' } } }, <%- JSON.stringify(_opts) %>)
+  });
+})();
+</script>

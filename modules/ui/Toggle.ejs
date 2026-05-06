@@ -24,7 +24,7 @@
       <% if (locals.value)    { %>value="<%= locals.value %>"<% } %>
       <% if (locals.onchange) { %>onchange="<%= locals.onchange %>"<% } %>
     >
-    <div class="bg-surface-active rounded-full peer peer-focus:ring-2 peer-focus:ring-primary/20 peer-checked:bg-primary transition-all <%= wClass %>"></div>
+    <div class="bg-surface-sunken rounded-full peer peer-focus:ring-2 peer-focus:ring-border-focus peer-checked:bg-primary transition-all <%= wClass %>"></div>
     <div class="absolute left-0.5 top-0.5 bg-white rounded-full transition-all peer-checked:bg-primary-fg <%= dotClass %>"></div>
   </div>
   <% if (locals.label) { %>

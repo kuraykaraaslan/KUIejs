@@ -3,14 +3,14 @@
   var _title       = locals.title       || '';
   var _description = locals.description || '';
   var _open        = !!locals.open;
-  var _size        = locals.size        || 'md';
+  var _sz          = locals.size        || 'md';
   var _fullscreen  = !!locals.fullscreen;
   var _scrollable  = !!locals.scrollable;
   var _closeOnBackdropClick = locals.closeOnBackdropClick !== false;
 
   var overlayClass = _open ? 'opacity-100' : 'opacity-0 pointer-events-none';
-  var sizeMap = { sm: 'max-w-sm', md: 'max-w-md', lg: 'max-w-lg' };
-  var sizeClass = _fullscreen ? '' : (sizeMap[_size] || 'max-w-md');
+  var sc = { sm: 'max-w-sm', md: 'max-w-md', lg: 'max-w-lg', xl: 'max-w-xl', '2xl': 'max-w-2xl' };
+  var sizeClass = _fullscreen ? '' : (sc[_sz] || 'max-w-md');
   var titleId = _id + '-title';
   var descId  = _description ? (_id + '-desc') : '';
 %>

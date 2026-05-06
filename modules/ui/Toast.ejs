@@ -1,5 +1,5 @@
 <%
-  var _variant     = locals.variant     || 'info';
+  var _v           = locals.variant     || 'info';
   var _title       = locals.title       || '';
   var _message     = locals.message     || '';
   var _actionLabel = locals.actionLabel || '';
@@ -13,7 +13,7 @@
     info:    { container: 'bg-info-subtle border-info',       iconColor: 'text-info',        icon: 'fa-circle-info' },
     loading: { container: 'bg-surface-raised border-border',  iconColor: 'text-text-secondary', icon: 'fa-spinner fa-spin' },
   };
-  var vm = variantMap[_variant] || variantMap.info;
+  var vm = variantMap[_v] || variantMap.info;
 %>
 <div class="relative w-80 rounded-xl border shadow-lg overflow-hidden pointer-events-auto <%= vm.container %>">
   <div class="flex items-start gap-3 px-4 pt-4 pb-3">
