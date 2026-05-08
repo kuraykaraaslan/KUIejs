@@ -1,3 +1,23 @@
+<% var isGrid = locals.variantLayout === 'grid'; %>
+
+<% if (isGrid) { %>
+<div class="bg-surface-raised border border-border rounded-xl overflow-hidden">
+  <div class="px-3 py-2 border-b border-border bg-surface-overlay flex items-center justify-between">
+    <h3 class="text-xs font-medium text-text-primary truncate"><%= variant.title %></h3>
+    <button
+      type="button"
+      class="copy-btn px-2 py-0.5 text-xs rounded font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus bg-surface-overlay text-text-secondary hover:text-text-primary hover:bg-surface-sunken"
+      data-code="<%- encodeURIComponent(variant.code) %>"
+    >Copy</button>
+  </div>
+  <div
+    class="flex items-center justify-center px-4 py-6 min-h-24"
+    style="background-image:radial-gradient(circle,var(--border) 1px,transparent 1px);background-size:16px 16px"
+  >
+    <div class="w-full"><%- variant.previewHtml %></div>
+  </div>
+</div>
+<% } else { %>
 <div class="bg-surface-raised border border-border rounded-xl overflow-hidden">
   <!-- Header -->
   <div class="flex items-center justify-between gap-3 px-4 py-3 border-b border-border bg-surface-overlay">
@@ -13,25 +33,25 @@
   </div>
 
   <!-- Preview + Code -->
-  <div class="flex <%= variant.layout === 'stack' ? 'flex-col divide-y' : 'flex-col sm:flex-row divide-y sm:divide-y-0 sm:divide-x' %> divide-border">
+  <div class="flex <%= (locals.variantLayout === 'stack' || variant.layout === 'stack') ? 'flex-col divide-y' : 'flex-col sm:flex-row divide-y sm:divide-y-0 sm:divide-x' %> divide-border">
 
     <!-- Preview panel -->
-    <div class="flex flex-col <%= variant.layout !== 'stack' ? 'sm:w-2/5' : '' %>">
+    <div class="flex flex-col <%= (locals.variantLayout !== 'stack' && variant.layout !== 'stack') ? 'sm:w-2/5' : '' %>">
       <div class="px-3 py-1.5 border-b border-border bg-surface-overlay">
         <span class="text-xs font-medium text-text-secondary uppercase tracking-wider">Preview</span>
       </div>
       <div
-        class="flex items-start justify-center px-6 py-8 <%= variant.layout === 'stack' ? 'min-h-40' : 'flex-1 min-h-28' %>"
+        class="flex items-start justify-center px-6 py-8 <%= (locals.variantLayout === 'stack' || variant.layout === 'stack') ? 'min-h-40' : 'flex-1 min-h-28' %>"
         style="background-image:radial-gradient(circle,var(--border) 1px,transparent 1px);background-size:16px 16px"
       >
-        <div class="w-full <%= variant.layout !== 'stack' ? 'flex flex-wrap gap-2 items-center justify-center' : '' %>">
+        <div class="w-full <%= (locals.variantLayout !== 'stack' && variant.layout !== 'stack') ? 'flex flex-wrap gap-2 items-center justify-center' : '' %>">
           <%- variant.previewHtml %>
         </div>
       </div>
     </div>
 
     <!-- Code panel -->
-    <div class="flex flex-col bg-surface-sunken overflow-x-auto <%= variant.layout !== 'stack' ? 'flex-1' : '' %>">
+    <div class="flex flex-col bg-surface-sunken overflow-x-auto <%= (locals.variantLayout !== 'stack' && variant.layout !== 'stack') ? 'flex-1' : '' %>">
       <div class="px-3 py-1.5 border-b border-border bg-surface-overlay">
         <span class="text-xs font-medium text-text-secondary uppercase tracking-wider">Code</span>
       </div>
@@ -40,3 +60,4 @@
 
   </div>
 </div>
+<% } %>

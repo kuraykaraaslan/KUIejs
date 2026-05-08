@@ -23,6 +23,10 @@ router.get('/:slug', (req, res) => {
   const selectedId = req.params.slug;
   const selected = SHOWCASE_DATA_MAP[selectedId] ?? null;
 
+  const variantLayout = (['side', 'stack', 'grid'] as const).includes(req.query.layout as any)
+    ? (req.query.layout as 'side' | 'stack' | 'grid')
+    : 'side';
+
   const navGroups = NAV_GROUPS.map((group) => ({
     ...group,
     items: group.items.map((item) => ({
@@ -37,6 +41,7 @@ router.get('/:slug', (req, res) => {
     navGroups,
     selectedId,
     selected,
+    variantLayout,
   });
 });
 

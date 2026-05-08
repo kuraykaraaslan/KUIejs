@@ -8,6 +8,18 @@
   </button>
 
   <div class="ml-auto flex items-center gap-1">
+    <% if (locals.selectedId) { %>
+    <div class="flex items-center gap-0.5 mr-2 border border-border rounded-md p-0.5" role="group" aria-label="Layout">
+      <% [['side','fa-table-columns'],['stack','fa-table-rows'],['grid','fa-border-all']].forEach(function(opt) { %>
+        <% var isActive = (locals.variantLayout || 'side') === opt[0]; %>
+        <a href="?layout=<%= opt[0] %>"
+           title="<%= opt[0].charAt(0).toUpperCase() + opt[0].slice(1) %> layout"
+           class="flex items-center justify-center w-7 h-7 rounded text-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-border-focus <%= isActive ? 'bg-primary text-primary-fg' : 'text-text-secondary hover:text-text-primary hover:bg-surface-overlay' %>"
+           aria-pressed="<%= isActive ? 'true' : 'false' %>"
+        ><i class="fa-solid <%= opt[1] %>" aria-hidden="true"></i></a>
+      <% }) %>
+    </div>
+    <% } %>
     <%- include('./github-button') %>
     <%- include('./theme-switcher') %>
     <%- include('./user-menu') %>
