@@ -199,3 +199,51 @@ if (sourceToggleBtn && sourceContent) {
     sourceContent.classList.toggle('hidden', expanded);
   });
 }
+
+// ── Sidebar search ────────────────────────────────────────
+(function SidebarSearchModule() {
+  var input = document.getElementById('sidebar-search');
+  if (!input) return;
+
+  var debounceTimer = null;
+
+  function filterSidebar(query) {
+    var q = query.trim().toLowerCase();
+    var groups = document.querySelectorAll('[data-group-section]');
+
+    if (!q) {
+      // Show everything
+      document.querySelectorAll('[data-nav-item]').forEach(function(el) {
+        el.style.display = '';
+      });
+      groups.forEach(function(g) { g.style.display = ''; });
+      return;
+    }
+
+    groups.forEach(function(groupEl) {
+      var items = groupEl.querySelectorAll('[data-nav-item]');
+      var hasVisible = false;
+      items.forEach(function(item) {
+        var title = (item.getAttribute('data-search-title') || '').toLowerCase();
+        var matches = title.includes(q);
+        item.style.display = matches ? '' : 'none';
+        if (matches) hasVisible = true;
+      });
+      groupEl.style.display = hasVisible ? '' : 'none';
+    });
+  }
+
+  input.addEventListener('input', function() {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(function() {
+      filterSidebar(input.value);
+    }, 150);
+  });
+
+  input.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      input.value = '';
+      filterSidebar('');
+    }
+  });
+})();

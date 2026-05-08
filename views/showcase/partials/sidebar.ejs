@@ -26,6 +26,23 @@
     </button>
   </div>
 
+  <!-- Search -->
+  <div class="sidebar-full-only px-3 py-2 border-b border-border">
+    <div class="relative">
+      <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-1/2 -translate-y-1/2 text-text-disabled text-xs" aria-hidden="true"></i>
+      <input
+        id="sidebar-search"
+        type="search"
+        placeholder="Search components…"
+        autocomplete="off"
+        class="w-full rounded-md border border-border bg-surface-base pl-7 pr-3 py-1.5 text-xs
+               text-text-primary placeholder:text-text-disabled
+               focus:outline-none focus:ring-2 focus:ring-border-focus"
+        aria-label="Search components"
+      />
+    </div>
+  </div>
+
   <!-- Nav -->
   <nav class="flex-1 overflow-y-auto px-2 py-3 space-y-1" aria-label="Component navigation">
 
@@ -51,7 +68,7 @@
     <% } %>
 
     <% navGroups.forEach(function(group, gi) { %>
-      <div class="nav-group">
+      <div class="nav-group" data-group-section>
 
         <% if (group.sectionStart) { %>
           <div class="sidebar-full-only flex items-center gap-2 px-3 pt-3 pb-1">
@@ -85,7 +102,7 @@
               var href = item.href ? item.href : '/' + item.id;
               var isExternal = !!(item.href && !item.href.startsWith('/'));
             %>
-            <li>
+            <li data-nav-item data-search-title="<%= item.title.toLowerCase() %>">
               <a
                 href="<%= href %>"
                 <% if (isExternal) { %>target="_blank" rel="noopener noreferrer"<% } %>
@@ -167,7 +184,7 @@
       <% } %>
 
       <% navGroups.forEach(function(group, gi) { %>
-        <div>
+        <div data-group-section>
           <% if (group.sectionStart) { %>
             <div class="flex items-center gap-2 px-3 pt-3 pb-1">
               <div class="flex-1 h-px bg-border"></div>
@@ -196,7 +213,7 @@
                 var isActive = item.active || item.id === selectedId;
                 var href = item.href ? item.href : '/' + item.id;
               %>
-              <li>
+              <li data-nav-item data-search-title="<%= item.title.toLowerCase() %>">
                 <a
                   href="<%= href %>"
                   aria-current="<%= isActive ? 'page' : 'false' %>"
