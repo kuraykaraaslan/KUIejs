@@ -1,8 +1,13 @@
+import crypto from 'crypto';
+import fs from 'fs';
 import express from 'express';
 import path from 'path';
 import expressLayouts from 'express-ejs-layouts';
+import cookieParser from 'cookie-parser';
+import helmet from 'helmet';
 import indexRouter from './routes/index';
 import themesRouter from './routes/themes';
+import { errorHandler } from './middleware/error';
 
 const app = express();
 
@@ -17,6 +22,15 @@ app.locals.site = {
   authorUrl:   'https://kuray.dev',
 };
 
+// Asset versioning — MD5 hash of compiled CSS for cache-busting
+try {
+  const cssPath = path.join(__dirname, '../public/css/app.css');
+  const cssContent = fs.readFileSync(cssPath);
+  app.locals.assetVersion = crypto.createHash('md5').update(cssContent).digest('hex').slice(0, 8);
+} catch {
+  app.locals.assetVersion = 'dev';
+}
+
 // Shared across every view/partial
 app.locals.catStyle = {
   'Atom':     'background:var(--info-subtle);color:var(--info-fg)',
@@ -30,17 +44,38 @@ app.locals.catStyle = {
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '../views'));
-app.use(expressLayouts);
 
-app.use(express.static(path.join(__dirname, '../public')));
+// ── Middleware ──────────────────────────────────────────────
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+// CSP disabled — project uses CDN assets (FA, Leaflet, Chart.js)
+app.use(helmet({ contentSecurityPolicy: false }));
+app.use(expressLayouts);
+app.use(express.static(path.join(__dirname, '../public')));
 
+// Per-request locals for all views
+app.use((req, res, next) => {
+  res.locals.currentPath = req.path;
+  res.locals.theme = req.cookies['theme'] === 'dark' ? 'dark' : 'light';
+  next();
+});
+
+// ── Health check ────────────────────────────────────────────
+app.get('/health', (_req, res) => {
+  res.status(200).json({ status: 'ok' });
+});
+
+// ── Routes ──────────────────────────────────────────────────
 app.use('/', indexRouter);
 app.use('/theme', themesRouter);
 
-app.use((req, res) => {
+// 404 catch-all
+app.use((_req, res) => {
   res.status(404).render('404', { title: '404 — Not Found' });
 });
+
+// Global error handler — must be last
+app.use(errorHandler);
 
 export default app;
