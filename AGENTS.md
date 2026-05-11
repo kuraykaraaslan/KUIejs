@@ -1,6 +1,6 @@
 > **Note:** `../00_Config_and_AI_Rules` is always tagged and must be loaded before any work begins.
 
-# 02 EJS Components
+# KUI EJS Showcase
 
 Server-rendered multi-page website themes built with Node.js, Express, EJS, and Tailwind CSS 4.
 
@@ -22,7 +22,7 @@ Server-rendered multi-page website themes built with Node.js, Express, EJS, and 
 ## Project Structure
 
 ```
-02_EJS_Components/
+KUIejs/
 ├── src/
 │   ├── server.ts              ← Entry point
 │   ├── app.ts                 ← Express setup, middleware, routes
