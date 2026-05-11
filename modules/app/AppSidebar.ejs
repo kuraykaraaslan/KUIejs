@@ -3,6 +3,8 @@
   var _activeId   = locals.activeId || '';
   var _collapsed  = !!locals.collapsed;
   var _groups     = locals.navGroups || (locals.navItems ? [{ items: locals.navItems }] : []);
+  var _searchable = locals.searchable !== false;
+  var _searchId   = _id + '-search';
 %>
 <div id="<%= _id %>"
   data-collapsed="<%= _collapsed %>"
@@ -16,6 +18,22 @@
       <i class="fa-solid fa-chevron-left<%= _collapsed ? ' rotate-180' : '' %> transition-transform" aria-hidden="true"></i>
     </button>
   </div>
+
+  <% if (_searchable) { %>
+  <div class="<%= _collapsed ? 'hidden' : '' %> px-3 py-2 border-b border-border shrink-0" id="<%= _searchId %>-wrap">
+    <div class="relative">
+      <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-1/2 -translate-y-1/2 text-text-disabled text-xs" aria-hidden="true"></i>
+      <input
+        id="<%= _searchId %>"
+        type="search"
+        placeholder="Search…"
+        autocomplete="off"
+        class="w-full rounded-md border border-border bg-surface-base pl-7 pr-3 py-1.5 text-xs text-text-primary placeholder:text-text-disabled focus:outline-none focus:ring-2 focus:ring-border-focus"
+        aria-label="Search navigation"
+      />
+    </div>
+  </div>
+  <% } %>
 
   <nav class="flex-1 min-h-0 overflow-y-auto px-2 py-3 space-y-4" aria-label="Sidebar navigation">
     <% _groups.forEach(function(group, gi) {
@@ -42,6 +60,7 @@
             + (_collapsed ? 'justify-center px-2 py-2' : 'px-3 py-2 text-left ')
             + (isActive ? 'bg-primary-subtle text-primary font-medium' : 'text-text-secondary hover:text-text-primary hover:bg-surface-overlay');
         %>
+        <div data-nav-item data-search-title="<%= (item.label||'').toLowerCase() %>">
         <% if (item.href) { %>
         <a href="<%= item.href %>" <%= isActive ? 'aria-current="page"' : '' %> <%= (_collapsed && item.label) ? 'title="'+item.label+'"' : '' %> class="<%= cls %>">
         <% } else { %>
@@ -51,6 +70,7 @@
           <% if (!_collapsed) { %><span class="flex-1 truncate"><%= item.label %></span><% } %>
           <% if (!_collapsed && item.badge) { %><span class="inline-flex items-center rounded-full font-medium bg-primary-subtle text-primary px-2 py-0.5 text-xs"><%= item.badge %></span><% } %>
         <% if (item.href) { %></a><% } else { %></button><% } %>
+        </div>
         <% }); %>
       </div>
     </div>
@@ -77,6 +97,9 @@
       var labels=d.querySelectorAll('span.flex-1');
       labels.forEach(function(l){l.classList.toggle('hidden',!c);});
     });
+    // Hide search when collapsed
+    var sw=document.getElementById(id+'-search-wrap');
+    if(sw)sw.classList.toggle('hidden',!c);
   }
   function toggleSidebarGroup(sid,key){
     var items=document.getElementById(sid+'-gitems-'+key);
@@ -85,6 +108,44 @@
     var hidden=items.classList.toggle('hidden');
     if(icon)icon.classList.toggle('-rotate-90',hidden);
   }
+  // Sidebar search
+  (function initSidebarSearch(id){
+    var input=document.getElementById(id+'-search');
+    if(!input)return;
+    var sidebar=document.getElementById(id);
+    var timer=null;
+    function filter(q){
+      q=q.trim().toLowerCase();
+      var groups=sidebar.querySelectorAll('[data-group-section]') // only within this sidebar instance won't work without parent scope
+        || [];
+      // fallback: use nav element as scope
+      var nav=sidebar.querySelector('nav');
+      var scope=nav||sidebar;
+      if(!q){
+        scope.querySelectorAll('[data-nav-item]').forEach(function(el){el.style.display='';});
+        scope.querySelectorAll('[data-group-section]').forEach(function(el){el.style.display='';});
+        return;
+      }
+      scope.querySelectorAll('[data-group-section]').forEach(function(g){
+        var items=g.querySelectorAll('[data-nav-item]');
+        var visible=false;
+        items.forEach(function(item){
+          var t=(item.getAttribute('data-search-title')||'').toLowerCase();
+          var m=t.includes(q);
+          item.style.display=m?'':'none';
+          if(m)visible=true;
+        });
+        g.style.display=visible?'':'none';
+      });
+    }
+    input.addEventListener('input',function(){
+      clearTimeout(timer);
+      timer=setTimeout(function(){filter(input.value);},150);
+    });
+    input.addEventListener('keydown',function(e){
+      if(e.key==='Escape'){input.value='';filter('');}
+    });
+  })('<%= _id %>');
   window.toggleAppSidebar=window.toggleAppSidebar||toggleAppSidebar;
   window.toggleSidebarGroup=window.toggleSidebarGroup||toggleSidebarGroup;
 })();

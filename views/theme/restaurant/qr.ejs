@@ -1,0 +1,75 @@
+<%
+  var _data   = locals.data   || {};
+  var _table  = locals.table  || { tableNumber: 1, capacity: 2, status: 'AVAILABLE' };
+  var _url    = locals.menuUrl || 'http://localhost:3000/theme/restaurant';
+  var _rest   = _data.restaurant || {};
+
+  var statusMeta = {
+    AVAILABLE: { text: 'text-success', bg: 'bg-success/10', border: 'border-success/30', label: 'Available' },
+    OCCUPIED:  { text: 'text-error',   bg: 'bg-error/10',   border: 'border-error/30',   label: 'Occupied'  },
+    RESERVED:  { text: 'text-warning', bg: 'bg-warning/10', border: 'border-warning/30', label: 'Reserved'  },
+  };
+  var sm = statusMeta[_table.status] || statusMeta.AVAILABLE;
+
+  var pattern = [1,1,1,1,1,1,1,0,1,0,1,0,0,0,0,0,1,1,0,1,1,0,1,1,1,0,1,0,1,1,1,0,1,1,1,0,1,1,0,0,1,0,1,1,1,0,1,0,1,0,1,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,0,1,0,0,0,0,0,0,0,0,1,0,1,1,0,1,1,0,1,1,0,1,0,0,1,0,1,0,0,0,1,0,1];
+%>
+
+<div class="min-h-screen bg-surface-base flex flex-col items-center justify-center p-6">
+
+  <div class="w-full max-w-xs bg-surface-raised border border-border rounded-2xl overflow-hidden shadow-lg">
+
+    <div class="bg-primary px-6 py-5 text-center">
+      <p class="text-primary-fg font-bold text-xl"><%= _rest.name %></p>
+      <p class="text-primary-fg/80 text-sm mt-1"><%= _rest.tagline %></p>
+    </div>
+
+    <div class="p-6 flex flex-col items-center gap-5">
+
+      <div class="flex items-center gap-2 text-sm">
+        <i class="fa-solid fa-chair text-text-secondary" aria-hidden="true"></i>
+        <span class="font-bold text-text-primary">Table <%= _table.tableNumber %></span>
+        <span class="text-text-secondary">·</span>
+        <span class="text-text-secondary"><%= _table.capacity %> seats</span>
+        <span class="inline-flex items-center gap-1 rounded-full border text-xs px-2 py-0.5 font-medium <%= sm.text %> <%= sm.bg %> <%= sm.border %>">
+          <%= sm.label %>
+        </span>
+      </div>
+
+      <!-- QR Code simulation -->
+      <div class="relative w-44 h-44 rounded-xl overflow-hidden border-2 border-text-primary bg-white p-2" aria-label="QR code for restaurant menu">
+        <div class="w-full h-full grid" style="grid-template-columns:repeat(10,1fr);grid-template-rows:repeat(10,1fr);gap:2px;background:#fff;">
+          <% pattern.forEach(function(cell) { %>
+          <div style="background:<%= cell ? '#18181b' : '#ffffff' %>;border-radius:1px;"></div>
+          <% }); %>
+        </div>
+        <div class="absolute top-2 left-2 w-8 h-8 border-4 border-zinc-900 rounded bg-white flex items-center justify-center">
+          <div class="w-3 h-3 bg-zinc-900 rounded-sm"></div>
+        </div>
+        <div class="absolute top-2 right-2 w-8 h-8 border-4 border-zinc-900 rounded bg-white flex items-center justify-center">
+          <div class="w-3 h-3 bg-zinc-900 rounded-sm"></div>
+        </div>
+        <div class="absolute bottom-2 left-2 w-8 h-8 border-4 border-zinc-900 rounded bg-white flex items-center justify-center">
+          <div class="w-3 h-3 bg-zinc-900 rounded-sm"></div>
+        </div>
+      </div>
+
+      <div class="text-center space-y-1">
+        <p class="text-sm font-semibold text-text-primary">Scan to view our menu</p>
+        <p class="text-xs text-text-secondary font-mono break-all"><%= _url %></p>
+      </div>
+
+      <a href="/theme/restaurant" class="w-full flex items-center justify-center gap-2 rounded-xl bg-primary text-primary-fg font-semibold text-sm py-3 hover:opacity-90 transition-opacity">
+        <i class="fa-solid fa-utensils" aria-hidden="true"></i>
+        Open Menu
+      </a>
+
+    </div>
+
+    <div class="border-t border-border px-6 py-3 bg-surface-overlay text-center">
+      <p class="text-xs text-text-secondary"><%= _rest.openHours %></p>
+      <p class="text-xs text-text-secondary mt-0.5"><%= _rest.phone %></p>
+    </div>
+
+  </div>
+
+</div>

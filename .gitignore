@@ -1,6 +1,6 @@
 node_modules/
 dist/
-public/css/main.css
+public/css/app.css
 .env
 .env.local
 *.log

@@ -1,0 +1,53 @@
+<%
+  var _state          = locals.state          || {};
+  var _events         = locals.events         || [];
+  var _severityFilter = locals.severityFilter || 'ALL';
+  var severities      = ['ALL','CRITICAL','WARNING','INFO'];
+%>
+
+<%- include('./_nav', { activePage: 'events', state: _state }) %>
+
+  <div class="flex gap-2 flex-wrap mb-4">
+    <% severities.forEach(function(s) { var isActive = s === _severityFilter; %>
+    <a href="/theme/ups/events<%= s==='ALL'?'':'?severity='+s %>"
+       class="text-xs font-medium px-3 py-1.5 rounded-lg border transition-colors
+         <%= isActive ? 'bg-primary text-primary-fg border-primary' : 'border-border text-text-secondary hover:text-text-primary hover:bg-surface-overlay' %>">
+      <%= s.charAt(0) + s.slice(1).toLowerCase() %>
+    </a>
+    <% }); %>
+  </div>
+
+  <div class="rounded-xl border border-border bg-surface-raised overflow-hidden">
+    <table class="w-full text-sm">
+      <thead>
+        <tr class="border-b border-border bg-surface-overlay">
+          <th class="px-4 py-3 text-left text-xs font-semibold text-text-secondary">Timestamp</th>
+          <th class="px-4 py-3 text-left text-xs font-semibold text-text-secondary">Severity</th>
+          <th class="px-4 py-3 text-left text-xs font-semibold text-text-secondary">Code</th>
+          <th class="px-4 py-3 text-left text-xs font-semibold text-text-secondary">Message</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-border">
+        <% _events.forEach(function(ev, i) {
+          var sm = { INFO: { dot:'bg-info', text:'text-info', label:'Info' }, WARNING: { dot:'bg-warning', text:'text-warning', label:'Warning' }, CRITICAL: { dot:'bg-error', text:'text-error', label:'Critical' } }[ev.severity] || { dot:'bg-info', text:'text-info', label:'Info' };
+          var ts = new Date(ev.timestamp).toLocaleString('tr-TR', { dateStyle:'short', timeStyle:'short' });
+        %>
+        <tr class="<%= i%2===0?'bg-surface-base':'bg-surface-raised' %> hover:bg-surface-overlay transition-colors">
+          <td class="px-4 py-2.5 text-xs font-mono text-text-secondary whitespace-nowrap"><%= ts %></td>
+          <td class="px-4 py-2.5">
+            <span class="inline-flex items-center gap-1.5 text-xs font-medium <%= sm.text %>">
+              <span class="h-1.5 w-1.5 rounded-full <%= sm.dot %>"></span><%= sm.label %>
+            </span>
+          </td>
+          <td class="px-4 py-2.5 text-xs font-mono text-text-secondary"><%= ev.code %></td>
+          <td class="px-4 py-2.5 text-xs text-text-primary"><%= ev.message %></td>
+        </tr>
+        <% }); %>
+        <% if (_events.length === 0) { %>
+        <tr><td colspan="4" class="px-4 py-10 text-center text-sm text-text-secondary">No events found.</td></tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+
+<%- include('./_nav-close') %>

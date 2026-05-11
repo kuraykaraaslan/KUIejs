@@ -1,0 +1,17 @@
+<%
+  var _type = (locals.type || '').toUpperCase();
+  var _size = locals.size || 'md';
+
+  var meta = {
+    VEGAN:        { label: 'Vegan',       icon: 'fa-solid fa-leaf',  text: 'text-green-700 dark:text-green-400', bg: 'bg-green-50 dark:bg-green-950/30', border: 'border-green-200 dark:border-green-800' },
+    VEGETARIAN:   { label: 'Vegetarian',  icon: 'fa-solid fa-seedling', text: 'text-green-600 dark:text-green-500', bg: 'bg-green-50/70 dark:bg-green-950/20', border: 'border-green-200 dark:border-green-800' },
+    HALAL:        { label: 'Halal',       icon: 'fa-solid fa-star',  text: 'text-primary',                      bg: 'bg-primary-subtle',                border: 'border-primary/30' },
+    GLUTEN_FREE:  { label: 'Gluten-Free', icon: 'fa-solid fa-wheat-awn-circle-exclamation', text: 'text-warning', bg: 'bg-warning/10', border: 'border-warning/30' },
+  };
+  var m   = meta[_type] || { label: _type, icon: 'fa-solid fa-circle-check', text: 'text-text-secondary', bg: 'bg-surface-overlay', border: 'border-border' };
+  var cls = _size === 'sm' ? 'text-xs px-1.5 py-0.5 gap-1' : 'text-xs px-2.5 py-1 gap-1.5';
+%>
+<span class="inline-flex items-center rounded-full border font-medium <%= cls %> <%= m.text %> <%= m.bg %> <%= m.border %>">
+  <i class="<%= m.icon %> text-xs" aria-hidden="true"></i>
+  <%= m.label %>
+</span>

@@ -1,5 +1,5 @@
 // ── Theme switcher ────────────────────────────────────────
-const html = document.getElementById('html-root');
+const html = document.documentElement;
 const themeSwitcherBtn = document.getElementById('theme-switcher-btn');
 const themeDropdown = document.getElementById('theme-dropdown');
 const themeSwitcherContainer = document.getElementById('theme-switcher-container');

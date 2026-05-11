@@ -14,10 +14,16 @@
     <!-- Flash message (server-side) -->
     <%- include('../partials/_flash') %>
 
+    <!-- Header / Navbar -->
+    <%- include('../partials/_navbar') %>
+
     <!-- Main content -->
     <main id="main-content" class="flex-1" tabindex="-1">
       <%- body %>
     </main>
+
+    <!-- Footer -->
+    <%- include('../partials/_footer') %>
 
     <!-- Toast region (client-side AJAX feedback) -->
     <div id="toast-region"

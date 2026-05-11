@@ -1,0 +1,70 @@
+<%
+  var _state    = locals.state    || {};
+  var _settings = _state.settings || {};
+  var _ups      = _state.ups      || {};
+%>
+
+<%- include('./_nav', { activePage: 'settings', state: _state }) %>
+
+  <div class="space-y-6 max-w-2xl">
+
+    <!-- Shutdown & Power -->
+    <div class="rounded-xl border border-border bg-surface-raised overflow-hidden">
+      <div class="px-4 py-3 border-b border-border"><h2 class="text-xs font-bold text-text-primary uppercase tracking-wide">Shutdown & Power</h2></div>
+      <div class="divide-y divide-border">
+        <div class="flex items-center justify-between px-4 py-3">
+          <div><p class="text-sm font-medium text-text-primary">Shutdown Delay</p><p class="text-xs text-text-secondary">Seconds before initiating OS shutdown on battery</p></div>
+          <span class="font-mono text-sm text-text-primary"><%= _settings.shutdownDelay %>s</span>
+        </div>
+        <div class="flex items-center justify-between px-4 py-3">
+          <div><p class="text-sm font-medium text-text-primary">Low Battery Threshold</p><p class="text-xs text-text-secondary">Trigger shutdown warning at this battery level</p></div>
+          <span class="font-mono text-sm text-text-primary"><%= _settings.lowBatteryThreshold %>%</span>
+        </div>
+        <div class="flex items-center justify-between px-4 py-3">
+          <div><p class="text-sm font-medium text-text-primary">High Load Threshold</p><p class="text-xs text-text-secondary">Alert when load exceeds this percentage</p></div>
+          <span class="font-mono text-sm text-text-primary"><%= _settings.highLoadThreshold %>%</span>
+        </div>
+        <div class="flex items-center justify-between px-4 py-3">
+          <div><p class="text-sm font-medium text-text-primary">Sensitivity Mode</p><p class="text-xs text-text-secondary">Input voltage sensitivity (Low/Normal/High)</p></div>
+          <span class="text-sm text-text-primary"><%= _settings.sensitivityMode %></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notifications -->
+    <div class="rounded-xl border border-border bg-surface-raised overflow-hidden">
+      <div class="px-4 py-3 border-b border-border"><h2 class="text-xs font-bold text-text-primary uppercase tracking-wide">Notifications</h2></div>
+      <div class="divide-y divide-border">
+        <div class="flex items-center justify-between px-4 py-3">
+          <div><p class="text-sm font-medium text-text-primary">Audible Alarm</p><p class="text-xs text-text-secondary">Beep on power events</p></div>
+          <span class="text-sm font-semibold <%= _settings.audibleAlarm ? 'text-success' : 'text-text-secondary' %>"><%= _settings.audibleAlarm ? 'Enabled' : 'Disabled' %></span>
+        </div>
+        <div class="flex items-center justify-between px-4 py-3">
+          <div><p class="text-sm font-medium text-text-primary">Email Notifications</p><p class="text-xs text-text-secondary"><%= _settings.emailRecipient %></p></div>
+          <span class="text-sm font-semibold <%= _settings.emailNotifications ? 'text-success' : 'text-text-secondary' %>"><%= _settings.emailNotifications ? 'Enabled' : 'Disabled' %></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SNMP -->
+    <div class="rounded-xl border border-border bg-surface-raised overflow-hidden">
+      <div class="px-4 py-3 border-b border-border"><h2 class="text-xs font-bold text-text-primary uppercase tracking-wide">SNMP</h2></div>
+      <div class="divide-y divide-border">
+        <div class="flex items-center justify-between px-4 py-3">
+          <div><p class="text-sm font-medium text-text-primary">SNMP Agent</p></div>
+          <span class="text-sm font-semibold <%= _settings.snmpEnabled ? 'text-success' : 'text-text-secondary' %>"><%= _settings.snmpEnabled ? 'Enabled' : 'Disabled' %></span>
+        </div>
+        <div class="flex items-center justify-between px-4 py-3">
+          <div><p class="text-sm font-medium text-text-primary">Community String</p></div>
+          <span class="font-mono text-sm text-text-primary"><%= _settings.snmpCommunity %></span>
+        </div>
+      </div>
+    </div>
+
+    <button class="inline-flex items-center gap-2 rounded-lg bg-primary text-primary-fg text-sm font-semibold px-4 py-2 hover:opacity-90 transition-opacity">
+      <i class="fa-solid fa-floppy-disk" aria-hidden="true"></i>Save Settings
+    </button>
+
+  </div>
+
+<%- include('./_nav-close') %>

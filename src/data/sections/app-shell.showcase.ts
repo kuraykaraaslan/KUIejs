@@ -13,6 +13,17 @@ const miniSidebar = (collapsed = false) => `
   <div class="flex items-center ${collapsed ? 'justify-center h-9 border-b border-border' : 'h-9 px-3 border-b border-border'}">
     ${collapsed ? '<i class="fa-solid fa-grid-2 text-primary text-xs"></i>' : '<span class="text-xs font-bold text-primary">Acme</span>'}
   </div>
+  <div class="flex items-center ${collapsed ? 'justify-center' : 'justify-end'} px-1.5 py-1.5 border-b border-border">
+    <button class="p-1 rounded text-text-secondary hover:bg-surface-overlay">
+      <i class="fa-solid fa-chevron-left${collapsed ? ' rotate-180' : ''} text-[10px]"></i>
+    </button>
+  </div>
+  ${collapsed ? '' : `<div class="px-2 py-1.5 border-b border-border">
+    <div class="relative">
+      <i class="fa-solid fa-magnifying-glass absolute left-2 top-1/2 -translate-y-1/2 text-text-disabled text-[10px]"></i>
+      <div class="w-full rounded border border-border bg-surface-base pl-5 pr-2 py-1 text-[9px] text-text-disabled">Search…</div>
+    </div>
+  </div>`}
   <nav class="flex-1 px-1.5 py-2 space-y-0.5 text-xs">
     <a href="#" class="flex items-center ${collapsed ? 'justify-center py-1.5 rounded hover:bg-surface-overlay' : 'gap-1.5 px-2 py-1.5 rounded bg-primary-subtle text-primary font-medium'}">
       <i class="fa-solid fa-house text-[10px]"></i>${collapsed ? '' : '<span>Dashboard</span>'}
@@ -93,7 +104,7 @@ export function buildAppShellData(): ShowcaseItem[] {
 </div>`,
           code: `<%- include('modules/app/AppShell', {
   logoContent:  '<span class="text-sm font-bold text-primary">Acme</span>',
-  sidebarContent: '<%- include("modules/app/AppSidebar", { navGroups: navGroups, activeId: activeId }) %>',
+  sidebarContent: '<%- include("modules/app/AppSidebar", { navGroups: navGroups, activeId: activeId, searchable: true }) %>',
   topbarContent:  '<%- include("modules/app/AppTopBar", { children: topbarHtml }) %>',
   children: bodyHtml
 }) %>`,
@@ -120,7 +131,7 @@ export function buildAppShellData(): ShowcaseItem[] {
       title: 'AppSidebar',
       category: 'App',
       abbr: 'Sb',
-      description: 'Daraltılabilir kenar çubuğu. navGroups veya navItems alır; collapsed toggle dahili. footerContent slotu ile kullanıcı bilgisi gösterilebilir.',
+      description: 'Daraltılabilir kenar çubuğu. navGroups veya navItems alır; collapsed toggle dahili. searchable prop ile yerleşik arama filtresi; footerContent slotu ile kullanıcı bilgisi gösterilebilir.',
       filePath: 'modules/app/AppSidebar.ejs',
       sourceCode: appSidebarSource,
       variants: [
@@ -159,6 +170,32 @@ export function buildAppShellData(): ShowcaseItem[] {
   ],
   activeId: currentPage,
   footerContent: userMenuHtml
+}) %>`,
+          layout: 'stack',
+        },
+        {
+          title: 'Arama filtreli sidebar',
+          previewHtml: `<div class="flex bg-surface-raised border border-border rounded-xl overflow-hidden" style="height:300px;width:200px">
+  <div class="flex flex-col flex-1 w-56">
+    <div class="flex items-center justify-end px-2 py-2 border-b border-border">
+      <button class="p-1 rounded text-text-secondary hover:bg-surface-overlay"><i class="fa-solid fa-chevron-left text-xs"></i></button>
+    </div>
+    <div class="px-3 py-2 border-b border-border">
+      <div class="relative">
+        <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-1/2 -translate-y-1/2 text-text-disabled text-xs"></i>
+        <div class="w-full rounded-md border border-border bg-surface-base pl-7 pr-3 py-1.5 text-xs text-text-disabled">Search…</div>
+      </div>
+    </div>
+    <nav class="flex-1 px-2 py-3 space-y-4 overflow-y-auto">
+      ${sidebarNavGroup('Main', [{icon:'fa-solid fa-house',label:'Dashboard',active:true},{icon:'fa-solid fa-chart-bar',label:'Analytics',badge:3},{icon:'fa-solid fa-folder',label:'Projects'},{icon:'fa-solid fa-circle-check',label:'Tasks',badge:12}])}
+      ${sidebarNavGroup('Settings', [{icon:'fa-solid fa-users',label:'Team'},{icon:'fa-solid fa-credit-card',label:'Billing'},{icon:'fa-solid fa-gear',label:'Settings'}])}
+    </nav>
+  </div>
+</div>`,
+          code: `<%- include('modules/app/AppSidebar', {
+  navGroups: navGroups,
+  activeId: currentPage,
+  searchable: true
 }) %>`,
           layout: 'stack',
         },

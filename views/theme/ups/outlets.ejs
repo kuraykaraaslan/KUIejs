@@ -1,0 +1,46 @@
+<%
+  var _state   = locals.state   || {};
+  var _outlets = _state.outlets || [];
+  var _output  = _state.output  || {};
+  var onCount  = _outlets.filter(function(o) { return o.status === 'ON'; }).length;
+  var totalW   = _outlets.reduce(function(s, o) { return s + (o.powerW||0); }, 0);
+%>
+
+<%- include('./_nav', { activePage: 'outlets', state: _state }) %>
+
+  <div class="flex items-center justify-between mb-6">
+    <div class="flex items-center gap-4">
+      <div class="text-sm font-medium text-text-secondary"><span class="font-bold text-text-primary"><%= onCount %></span> / <%= _outlets.length %> outlets on</div>
+      <div class="text-sm font-medium text-text-secondary">Total load: <span class="font-mono font-bold text-text-primary"><%= totalW %> W</span></div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    <% _outlets.forEach(function(outlet) {
+      var sm = { ON: { text:'text-success', bg:'bg-success/10', border:'border-success/30', dot:'bg-success', label:'On' }, OFF: { text:'text-text-secondary', bg:'bg-surface-overlay', border:'border-border', dot:'bg-surface-sunken', label:'Off' }, REBOOTING: { text:'text-warning', bg:'bg-warning/10', border:'border-warning/30', dot:'bg-warning', label:'Rebooting' } }[outlet.status] || { text:'text-text-secondary', bg:'bg-surface-overlay', border:'border-border', dot:'bg-surface-sunken', label:'Off' };
+    %>
+    <div class="rounded-xl border border-border bg-surface-raised p-4 flex flex-col gap-3">
+      <div class="flex items-start justify-between">
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-plug text-text-secondary text-sm" aria-hidden="true"></i>
+          <span class="text-sm font-semibold text-text-primary"><%= outlet.name %></span>
+        </div>
+        <% if (outlet.protected) { %>
+        <span class="text-xs text-info" title="Protected"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i></span>
+        <% } %>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="inline-flex items-center gap-1.5 rounded-full border font-medium text-xs px-2.5 py-1 <%= sm.text %> <%= sm.bg %> <%= sm.border %>">
+          <span class="h-1.5 w-1.5 rounded-full flex-shrink-0 <%= sm.dot %>"></span>
+          <%= sm.label %>
+        </span>
+        <% if (outlet.powerW > 0) { %><span class="text-xs font-mono text-text-secondary"><%= outlet.powerW %> W</span><% } %>
+      </div>
+      <% if (outlet.sequenceDelay > 0) { %>
+      <p class="text-xs text-text-secondary">Startup delay: <%= outlet.sequenceDelay %>s</p>
+      <% } %>
+    </div>
+    <% }); %>
+  </div>
+
+<%- include('./_nav-close') %>

@@ -1,0 +1,17 @@
+<%
+  var _cat  = (locals.category || 'MAIN').toUpperCase();
+  var _size = locals.size || 'md';
+
+  var meta = {
+    STARTER:  { label: 'Starter',  text: 'text-amber-700 dark:text-amber-400',   bg: 'bg-amber-50 dark:bg-amber-950/30',   border: 'border-amber-200 dark:border-amber-800' },
+    MAIN:     { label: 'Main',     text: 'text-primary',                          bg: 'bg-primary-subtle',                   border: 'border-primary/30' },
+    DESSERT:  { label: 'Dessert',  text: 'text-secondary',                        bg: 'bg-secondary/10',                     border: 'border-secondary/30' },
+    DRINK:    { label: 'Drink',    text: 'text-info',                             bg: 'bg-info/10',                          border: 'border-info/30' },
+    SIDE:     { label: 'Side',     text: 'text-text-secondary',                   bg: 'bg-surface-overlay',                  border: 'border-border' },
+  };
+  var m   = meta[_cat] || meta.MAIN;
+  var cls = _size === 'sm' ? 'text-xs px-2 py-0.5' : 'text-xs px-2.5 py-1';
+%>
+<span class="inline-flex items-center rounded-full border font-medium <%= cls %> <%= m.text %> <%= m.bg %> <%= m.border %>">
+  <%= m.label %>
+</span>

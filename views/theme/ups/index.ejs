@@ -1,0 +1,129 @@
+<%
+  var _state   = locals.state   || {};
+  var _ups     = _state.ups     || {};
+  var _battery = _state.battery || {};
+  var _output  = _state.output  || {};
+  var _input   = _state.input   || {};
+  var _outlets = _state.outlets || [];
+  var _events  = _state.eventLog || [];
+
+  var recentEvents  = _events.slice(0, 3);
+  var onlineOutlets = _outlets.filter(function(o) { return o.status === 'ON'; });
+  var upsStatus     = _ups.status || 'OFFLINE';
+  var statusDot     = upsStatus === 'ON_LINE' ? 'bg-success' : upsStatus === 'ON_BATTERY' ? 'bg-warning animate-pulse' : 'bg-error';
+  var statusText    = upsStatus === 'ON_LINE' ? 'text-success' : upsStatus === 'ON_BATTERY' ? 'text-warning' : 'text-error';
+  var batColor      = _battery.percent > 50 ? 'bg-success' : _battery.percent > 20 ? 'bg-warning' : 'bg-error';
+  var batText       = _battery.percent > 50 ? 'text-success' : _battery.percent > 20 ? 'text-warning' : 'text-error';
+  var loadColor     = _output.loadPercent > 80 ? 'bg-error' : _output.loadPercent > 50 ? 'bg-warning' : 'bg-success';
+  var loadText      = _output.loadPercent > 80 ? 'text-error' : _output.loadPercent > 50 ? 'text-warning' : 'text-success';
+%>
+
+<%- include('./_nav', { activePage: 'dashboard', state: _state }) %>
+
+  <!-- Stat cards -->
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+    <div class="rounded-xl border border-border bg-surface-raised p-4 space-y-1.5">
+      <p class="text-xs font-medium text-text-secondary uppercase tracking-wide">Status</p>
+      <div class="flex items-center gap-2">
+        <span class="h-2.5 w-2.5 rounded-full flex-shrink-0 <%= statusDot %>"></span>
+        <p class="text-sm font-bold <%= statusText %>"><%= upsStatus.replace('_', ' ') %></p>
+      </div>
+      <p class="text-xs text-text-secondary"><%= _ups.model %></p>
+    </div>
+
+    <div class="rounded-xl border border-border bg-surface-raised p-4 space-y-1.5">
+      <p class="text-xs font-medium text-text-secondary uppercase tracking-wide">Battery</p>
+      <p class="text-2xl font-bold leading-none <%= batText %>"><%= _battery.percent %>%</p>
+      <div class="w-full h-1.5 rounded-full bg-surface-sunken overflow-hidden">
+        <div class="h-full rounded-full <%= batColor %>" style="width:<%= _battery.percent %>%"></div>
+      </div>
+    </div>
+
+    <div class="rounded-xl border border-border bg-surface-raised p-4 space-y-1.5">
+      <p class="text-xs font-medium text-text-secondary uppercase tracking-wide">Load</p>
+      <p class="text-2xl font-bold leading-none <%= loadText %>"><%= _output.loadPercent %>%</p>
+      <p class="text-xs text-text-secondary font-mono"><%= _output.watts %> W / <%= _ups.nominalWatts %> W</p>
+    </div>
+
+    <div class="rounded-xl border border-border bg-surface-raised p-4 space-y-1.5">
+      <p class="text-xs font-medium text-text-secondary uppercase tracking-wide">Runtime</p>
+      <p class="text-2xl font-bold text-text-primary leading-none">
+        <%= Math.floor(_battery.runtimeMinutes / 60) %>h <%= _battery.runtimeMinutes % 60 %>m
+      </p>
+      <p class="text-xs text-text-secondary">estimated remaining</p>
+    </div>
+  </div>
+
+  <!-- Middle row -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+
+    <!-- Power I/O -->
+    <div class="rounded-xl border border-border bg-surface-raised overflow-hidden">
+      <div class="px-4 py-3 border-b border-border">
+        <h2 class="text-xs font-bold text-text-primary uppercase tracking-wide">Power Input / Output</h2>
+      </div>
+      <div class="grid grid-cols-2 divide-x divide-border p-4 gap-4">
+        <div class="space-y-2">
+          <p class="text-xs font-semibold text-text-secondary uppercase tracking-wide">Input</p>
+          <div class="space-y-1">
+            <div class="flex justify-between text-xs"><span class="text-text-secondary">Voltage</span><span class="font-mono text-text-primary"><%= _input.voltageV %> V</span></div>
+            <div class="flex justify-between text-xs"><span class="text-text-secondary">Frequency</span><span class="font-mono text-text-primary"><%= _input.frequencyHz %> Hz</span></div>
+            <div class="flex justify-between text-xs"><span class="text-text-secondary">Current</span><span class="font-mono text-text-primary"><%= _input.currentA %> A</span></div>
+          </div>
+        </div>
+        <div class="space-y-2 pl-4">
+          <p class="text-xs font-semibold text-text-secondary uppercase tracking-wide">Output</p>
+          <div class="space-y-1">
+            <div class="flex justify-between text-xs"><span class="text-text-secondary">Voltage</span><span class="font-mono text-text-primary"><%= _output.voltageV %> V</span></div>
+            <div class="flex justify-between text-xs"><span class="text-text-secondary">Frequency</span><span class="font-mono text-text-primary"><%= _output.frequencyHz %> Hz</span></div>
+            <div class="flex justify-between text-xs"><span class="text-text-secondary">Current</span><span class="font-mono text-text-primary"><%= _output.currentA %> A</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Outlet summary -->
+    <div class="rounded-xl border border-border bg-surface-raised overflow-hidden">
+      <div class="px-4 py-3 border-b border-border flex items-center justify-between">
+        <h2 class="text-xs font-bold text-text-primary uppercase tracking-wide">Outlets</h2>
+        <a href="/theme/ups/outlets" class="text-xs text-primary hover:underline">View all</a>
+      </div>
+      <div class="p-4 grid grid-cols-2 gap-2">
+        <% _outlets.forEach(function(outlet) { %>
+        <div class="flex items-center gap-2 p-2 rounded-lg bg-surface-overlay text-xs">
+          <span class="h-2 w-2 rounded-full flex-shrink-0 <%= outlet.status==='ON'?'bg-success':'bg-surface-sunken' %>"></span>
+          <span class="text-text-primary truncate"><%= outlet.name %></span>
+          <% if (outlet.powerW > 0) { %><span class="ml-auto font-mono text-text-secondary shrink-0"><%= outlet.powerW %>W</span><% } %>
+        </div>
+        <% }); %>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Recent events -->
+  <div class="rounded-xl border border-border bg-surface-raised overflow-hidden">
+    <div class="px-4 py-3 border-b border-border flex items-center justify-between">
+      <h2 class="text-xs font-bold text-text-primary uppercase tracking-wide">Recent Events</h2>
+      <a href="/theme/ups/events" class="text-xs text-primary hover:underline">View all</a>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="w-full">
+        <tbody class="divide-y divide-border">
+          <% recentEvents.forEach(function(ev, i) {
+            var sm = { INFO: { dot:'bg-info', text:'text-info', label:'Info' }, WARNING: { dot:'bg-warning', text:'text-warning', label:'Warning' }, CRITICAL: { dot:'bg-error', text:'text-error', label:'Critical' } }[ev.severity] || { dot:'bg-info', text:'text-info', label:'Info' };
+            var ts = new Date(ev.timestamp).toLocaleString('tr-TR', { dateStyle:'short', timeStyle:'short' });
+          %>
+          <tr class="<%= i%2===0?'bg-surface-base':'bg-surface-raised' %>">
+            <td class="px-4 py-2.5 text-xs font-mono text-text-secondary whitespace-nowrap"><%= ts %></td>
+            <td class="px-4 py-2.5"><span class="inline-flex items-center gap-1.5 text-xs font-medium <%= sm.text %>"><span class="h-1.5 w-1.5 rounded-full <%= sm.dot %>"></span><%= sm.label %></span></td>
+            <td class="px-4 py-2.5 text-xs font-mono text-text-secondary"><%= ev.code %></td>
+            <td class="px-4 py-2.5 text-xs text-text-primary"><%= ev.message %></td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+<%- include('./_nav-close') %>

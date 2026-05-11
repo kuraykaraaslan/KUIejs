@@ -1,0 +1,100 @@
+<%
+  var _data         = locals.data         || {};
+  var _items        = _data.menuItems     || [];
+  var _categories   = _data.categories   || [];
+  var _activeCat    = locals.activeCategory || null;
+  var _restaurant   = _data.restaurant    || {};
+
+  var displayed = _activeCat
+    ? _items.filter(function(i) { return i.category === _activeCat; })
+    : _items;
+
+  function groupBy(arr, key) {
+    return arr.reduce(function(acc, item) {
+      var k = item[key];
+      if (!acc[k]) acc[k] = [];
+      acc[k].push(item);
+      return acc;
+    }, {});
+  }
+
+  var grouped = _activeCat ? null : groupBy(_items, 'category');
+  var catOrder = _activeCat ? null : _categories;
+%>
+
+<%- include('./_nav') %>
+
+<% if (_activeCat) { %>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    <% displayed.forEach(function(item) { %>
+    <a href="/theme/restaurant/item/<%= item.id %>" class="block group">
+      <div class="relative flex flex-col rounded-xl border border-border bg-surface-raised overflow-hidden transition-shadow group-hover:shadow-md<%= !item.available ? ' opacity-60' : '' %><%= item.featured ? ' ring-2 ring-primary/30' : '' %>">
+        <% if (item.featured) { %>
+        <div class="absolute top-2 right-2 z-10">
+          <span class="inline-flex items-center gap-1 rounded-full bg-primary text-primary-fg text-xs font-semibold px-2 py-0.5">
+            <i class="fa-solid fa-star text-xs" aria-hidden="true"></i> Featured
+          </span>
+        </div>
+        <% } %>
+        <div class="flex items-center justify-center h-28 bg-surface-overlay text-5xl select-none"><%= item.imageEmoji %></div>
+        <div class="flex flex-col gap-1.5 p-3">
+          <div class="flex items-start justify-between gap-2">
+            <span class="text-sm font-bold text-text-primary leading-snug"><%= item.name %></span>
+            <span class="shrink-0 text-sm font-bold text-primary">₺<%= item.price.toLocaleString('tr-TR') %></span>
+          </div>
+          <p class="text-xs text-text-secondary line-clamp-2"><%= item.description %></p>
+          <% if (item.dietary.length > 0) { %>
+          <div class="flex flex-wrap gap-1">
+            <% item.dietary.forEach(function(d) { %>
+            <span class="inline-flex items-center rounded-full border text-xs px-1.5 py-px gap-0.5 text-green-700 dark:text-green-400 bg-green-50 dark:bg-green-950/30 border-green-200 dark:border-green-800">
+              <i class="fa-solid fa-leaf" style="font-size:9px" aria-hidden="true"></i>
+              <%= d === 'GLUTEN_FREE' ? 'GF' : d.charAt(0) + d.slice(1).toLowerCase() %>
+            </span>
+            <% }); %>
+          </div>
+          <% } %>
+        </div>
+      </div>
+    </a>
+    <% }); %>
+  </div>
+
+<% } else { %>
+
+  <% catOrder.forEach(function(cat) { %>
+  <% var catItems = grouped[cat] || []; %>
+  <% if (catItems.length === 0) return; %>
+  <section class="mb-10">
+    <div class="flex items-center gap-3 mb-4">
+      <h2 class="text-base font-bold text-text-primary"><%= cat.charAt(0) + cat.slice(1).toLowerCase() %>s</h2>
+      <span class="text-xs text-text-secondary"><%= catItems.length %> items</span>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <% catItems.forEach(function(item) { %>
+      <a href="/theme/restaurant/item/<%= item.id %>" class="block group">
+        <div class="relative flex flex-col rounded-xl border border-border bg-surface-raised overflow-hidden transition-shadow group-hover:shadow-md<%= !item.available ? ' opacity-60' : '' %><%= item.featured ? ' ring-2 ring-primary/30' : '' %>">
+          <% if (item.featured) { %>
+          <div class="absolute top-2 right-2 z-10">
+            <span class="inline-flex items-center gap-1 rounded-full bg-primary text-primary-fg text-xs font-semibold px-2 py-0.5">
+              <i class="fa-solid fa-star text-xs" aria-hidden="true"></i> Featured
+            </span>
+          </div>
+          <% } %>
+          <div class="flex items-center justify-center h-28 bg-surface-overlay text-5xl select-none"><%= item.imageEmoji %></div>
+          <div class="flex flex-col gap-1.5 p-3">
+            <div class="flex items-start justify-between gap-2">
+              <span class="text-sm font-bold text-text-primary leading-snug"><%= item.name %></span>
+              <span class="shrink-0 text-sm font-bold text-primary">₺<%= item.price.toLocaleString('tr-TR') %></span>
+            </div>
+            <p class="text-xs text-text-secondary line-clamp-2"><%= item.description %></p>
+          </div>
+        </div>
+      </a>
+      <% }); %>
+    </div>
+  </section>
+  <% }); %>
+
+<% } %>
+
+<%- include('./_nav-close') %>
